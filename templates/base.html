@@ -1,0 +1,194 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  {% block title %}{% endblock %}
+  <link rel="stylesheet" href="{% static 'css/semantic.css' %}">
+  <script src="{% static 'js/jquery.min.js' %}"></script>
+  <script src="{% static 'js/semantic.min.js' %}"></script>
+  <script src="http://cdn.hcharts.cn/highcharts/highcharts.js"></script>
+  <script src="http://cdn.hcharts.cn/highcharts/modules/exporting.js"></script>
+  <script src="http://cdn.hcharts.cn/highcharts/themes/grid-light.js"></script>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+    main{
+       flex: 1 0 auto;
+    }
+    footer{
+       flex: 0 0 auto;
+    }
+  </style>
+  <script>
+    $(document)
+      .ready(function() {
+        // fix menu when passed
+        $('.masthead')
+          .visibility({
+            once: false,
+            onBottomPassed: function() {
+              $('.fixed.menu').transition('fade in');
+            },
+            onBottomPassedReverse: function() {
+              $('.fixed.menu').transition('fade out');
+            }
+          })
+        ;
+      })
+    ;
+  </script>
+  <style>
+    .masthead h1.ui.header {
+      font-size: 4em;
+      font-weight: normal;
+    }
+    .masthead h2 {
+      font-size: 1.7em;
+      font-weight: normal;
+    }
+    {% with request.resolver_match.url_name as url_name %}
+    #bg {
+      {% if url_name == 'index' %}
+        background: url("{% static 'images/index1.jpg' %}");
+        background-size: cover;
+      {% elif url_name == 'charts' %}
+        background: url("{% static 'images/charts1e.jpg' %}");
+        background-size: cover;
+      {% else %}
+        background: url("{% static 'images/about.jpg' %}") center no-repeat;
+        background-size: cover;
+      {% endif %}
+    }
+    {% endwith %}
+  </style>
+</head>
+<body>
+  <main>
+    {% with request.resolver_match.url_name as url_name %}
+      <div class="ui large top fixed menu transition hidden">
+        <div class="ui container">
+          <a class="{% if url_name == 'index' %}active item {% else %}item {% endif %}" href="/index">Home</a>
+          <a class="{% if url_name == 'charts' %}active item {% else %}item {% endif %}" href="/charts">Charts</a>
+          <a class="{% if url_name == 'about' %}active item {% else %}item {% endif %}" href="/about">About</a>
+          <div class="right menu">
+            <div class="item">
+                  <div class="ui red button" onclick="window.open('https://github.com/gsown/gsweb')">View Source</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endwith %}
+
+    <div class="pusher">
+      <div class="ui inverted vertical masthead center aligned segment" style="padding: 0">
+        <div class="ui container" >
+          <div class="ui huge secondary inverted pointing menu">
+            {% with request.resolver_match.url_name as url_name %}
+            <a class="{% if url_name == 'index' %}active item {% else %}item {% endif %} " href="/index">Home</a>
+            <a class="{% if url_name == 'charts' %}active item {% else %}item {% endif %}" href="/charts">Charts</a>
+            <a class="{% if url_name == 'about' %}active item {% else %}item {% endif %}" href="/about">About</a>
+            {% endwith %}
+            <div class="right menu">
+              <div class="item">
+                <div class="ui inverted button" onclick="window.open('https://github.com/gsown/gsweb')">View Source</div>
+              </div>
+          </div>
+          </div>
+        </div>
+        <div id="bg">
+          <div class="ui  container" style="padding: 15% 0px">
+            <h1 class="ui inverted header">
+              G's website && i-m.top
+            </h1>
+            {% with request.resolver_match.url_name as url_name %}
+            {% if url_name == 'index' %}
+            <h2>"Data scientist is just a sexed up word for a statistician."</h2>
+            <h3 align="right">– Nate Silver</h3>
+            {% elif url_name == 'charts' %}
+            <h2>"The data scientist was called, only half-jokingly, a caped superhero."</h2>
+            <h3 align="right">– Ben Rooney</h3>
+            {% else %}
+            <h2>"Data Scientist = statistician + programmer + coach + storyteller + artist."</h2>
+            <h3 align="right">– Shlomo Aragmon</h3>
+            {% endif %}
+            {% endwith %}
+          </div>
+        </div>
+      </div>
+
+      {% block grid %}
+      {% endblock %}
+      {% block chartjs %}
+      {% endblock %}
+      {% block about %}
+      {% endblock %}
+    </div>
+  </main>
+
+  <footer>
+    <div class="ui inverted vertical footer segment" style="margin-top: 15px">
+      <div class="ui container">
+        <div class="ui stackable inverted grid" style="margin: auto">
+          <div class="two wide column"></div>
+          <div class="six wide column">
+            <h4 class="ui inverted header">FOLLOW ME</h4>
+            <div class="ui horizontal middle aligned list ">
+              <div class="item">
+                <button class="circular github grey ui icon button" onclick="window.open('https://github.com/gsown/gsweb')">
+                  <i class="github icon" ></i>
+                </button>
+              </div>
+              <div class="item">
+                <button class="circular weibo red ui icon button" onclick="window.open('http://weibo.com/robb1n')">
+                  <i class="weibo icon"></i>
+                </button>
+              </div>
+              <div class="item">
+                <button class="circular rss orange ui icon button" onclick="window.open('https://www.gperspace.com')">
+                  <i class="rss icon"></i>
+                </button>
+              </div>
+              <div class="item">
+                <button class="circular facebook  ui icon button" onclick="window.open('http://facebook.com/robb1n')">
+                  <i class="facebook f icon"></i>
+                </button>
+              </div>
+              <div class="item">
+                <button class="circular twitter ui icon button" onclick="window.open('https://twitter.com/gaoshengb1n')">
+                  <i class="twitter icon"></i>
+                </button>
+              </div>
+            </div>
+            <div class="ui hidden divider"></div>
+            <h4 class="ui inverted header">CONTACT ME</h4>
+            <div class="ui grey text container" style="color: #CFDDDE">gostmr@foxmail.com</div>
+          </div>
+          <div class="six wide column">
+            <h4 class="ui inverted header">
+              G's Website
+              <div class="sub header">A simple web that show data crawled form lianjia.com</div>
+            </h4>
+            <div class="ui hidden divider"></div>
+            <div class="ui relaxed horizontal inverted  link list">
+              <h4 class="header">PAGES</h4>
+              <a class="item" href="/index">Index</a>
+              <a class="item" href="/charts">Charts</a>
+              <a class="item" href="/about">About</a>
+            </div>
+            <div class="ui hidden divider"></div>
+            <div class="ui text container">
+              <div class="content" style="color: #CFDDDE">Copyright  © G's web 2017 All Rights Reserved</div>
+            </div>
+          </div>
+          <div class="two wide column"></div>
+        </div>
+      </div>
+    </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+  <title>主页</title>
+{% endblock %}
+
+{% block grid %}
+  <div class="ui container">
+    <div class="ui hidden divider"></div>
+    <div class="ui three column  grid" style="margin-bottom: 10px">
+      {% for item in HouseInfo %}
+        <div class="column">
+          <div class="ui card" style="margin: auto">
+              <div class="content">
+                <h4 class="ui header" href="{{ item.url }}" target="_blank">{{ item.title }}</h4>
+              </div>
+              <div class="small image">
+                <img src="{% static 'images/logo.jpg' %}">
+              </div>
+              <div class="content">
+                <div class="description">
+                  <p>浏览量：{{ item.browse }}</p>
+                  <p>价格：{{ item.price }}万元</p>
+                  <p>单价：{{ item.unitPrice }}元/平米</p>
+                </div>
+              </div>
+              <div class="extra content">
+                <div class="extra">
+                  {% for tag in item.area %}
+                    <div class="ui label">
+                      {{ tag }}
+                    </div>
+                  {% endfor %}
+                  <div class="ui right floated primary mini button" id="{{ item.id }}">
+                    详细信息
+                    <!--<i class="right chevron icon"></i>-->
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+        <div class="ui small modal" id="{{ item.id }}1">
+          <i class="close icon"></i>
+          <div class="header">
+            {{ item.title }}
+          </div>
+          <div class="content" style="padding-left: 40px;padding-right: 40px">
+            <table class="ui very basic  table">
+
+              <tbody>
+              <tr>
+                <td class="three wide">价格(万元)</td>
+                <td>{{ item.price }}</td>
+              </tr>
+              <tr>
+                <td class="collapsing">单价(元/平米)</td>
+                <td>{{ item.unitPrice }}</td>
+              </tr>
+              <tr>
+                <td class="collapsing">浏览(次)</td>
+                <td>{{ item.browse }}</td>
+              </tr>
+              <tr>
+                <td class="collapsing">带看(次)</td>
+                <td>{{ item.see }}</td>
+              </tr>
+              <tr>
+                <td class="collapsing">关注(人)</td>
+                <td>{{ item.follow }}</td>
+              </tr>
+              <tr>
+                <td class="collapsing">面积(平米)</td>
+                <td>{{ item.spaceSize }}</td>
+              </tr>
+              <tr>
+                <td class="collapsing">成交周期(天)</td>
+                <td>{{ item.dealCycle }}</td>
+              </tr>
+              <tr>
+                <td class="collapsing">发布日期</td>
+                <td>{{ item.saleDate }}</td>
+              </tr>
+              <tr>
+                <td class="collapsing">成交日期</td>
+                <td>{{ item.dealDate }}</td>
+              </tr>
+              <tr>
+                <td class="collapsing">地区</td>
+                <td>{{ item.area }}</td>
+              </tr>
+              <tr>
+                <td class="collapsing">房屋户型</td>
+                <td>{{ item.pattern }}</td>
+              </tr>
+              <tr>
+                <td class="collapsing">核心卖点</td>
+                <td>{{ item.sealPoint }}</td>
+              </tr>
+              <tr>
+                <td class="collapsing">户型介绍</td>
+                <td>{{ item.apartmentIntroduction }}</td>
+              </tr>
+              <tr>
+                <td class="collapsing">装修描述</td>
+                <td>{{ item.decorationDescription }}</td>
+              </tr>
+              <tr>
+                <td class="collapsing">源地址</td>
+                <td><a href="{{ item.url }}" target="_blank">{{ item.url }}</a></td>
+              </tr>
+
+              </tbody>
+            </table>
+
+          </div>
+
+          <div class="actions">
+            <div class="ui black deny button">
+              Close
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+      <script>
+          $(document).ready(function () {
+              {% for i in HouseInfo %}
+                  $('#{{ i.id }}').click(function () {
+                      $('#{{ i.id }}1').modal('show');
+                  });
+              {% endfor %}
+          })
+      </script>
+    </div>
+
+    <div class="ui center aligned container">
+      <div class="ui  small pagination menu" style="margin: 10px">
+        {% if HouseInfo.has_previous %}
+          <a class="icon item" href="?page={{ HouseInfo.previous_page_number }}">
+            <i class="icon left arrow"></i>
+          </a>
+        {% endif %}
+        <div class="disabled item">{{ HouseInfo.number }} of {{ HouseInfo.paginator.num_pages }}</div>
+        {% if HouseInfo.has_next %}
+          <a class="icon item" href="?page={{ HouseInfo.next_page_number }}">
+            <i class="icon right arrow"></i>
+          </a>
+        {% endif %}
+      </div>
+    </div>
+
+  </div>
+
+
+{% endblock %}

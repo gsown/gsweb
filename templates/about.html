@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+<title>关于</title>
+{% endblock %}
+{% block about %}
+    <div class="ui  container">
+      <div class="ui hidden divider"></div>
+      <div class="ui divided center aligned grid">
+        <div class="row">
+          <div class="four wide left aligned column">
+            <div class="ui fluid  card">
+              <div class="image">
+                <img src="{% static '/images/user.jpg' %}"></div>
+              <div class="content">
+                <a class="header">Robbin</a>
+                <div class="meta">
+                  <span class="date">gostmr@foxmail.com</span></div>
+                <div class="description">Robbin is a tacit but powerful person.</div></div>
+            </div>
+            </div>
+            <div class="nine wide left aligned column">
+            <div class="ui raised very padded text  segment">
+              <h2 class="ui header">G's website</h2>
+              <p>这是一个用来展示数据的网站，也是我的毕业设计的项目。</p>
+              <p>网站中的数据均由Python爬虫程序从大连链家网爬取，所有的数据均为二手房信息。</p>
+              <p>网站使用django搭建，由于目的只是为了展示数据，而且时间也比较仓促，所以设计的比较简陋，网站的所有样式均采用semantic UI，
+                数据存储侧采用mongoDB，感兴趣的可以访问我的<a href="https://github.com/gsown/gsweb" target="_blank">GitHub</a>。</p>
+              <p>同时爬取数据的爬虫程序已经开源到了<a href="https://github.com/gsown/lianjia_webcrawler" target="_blank">GitHub</a>，
+                如果对程序有任何疑问或者好的建议都可以联系我。</p>
+            </div>
+          </div>
+
+          </div>
+        </div>
+      </div>
+{% endblock %}

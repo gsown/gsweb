@@ -1,0 +1,377 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>表格</title>
+{% endblock %}
+
+{% block grid %}
+    <div class="ui container">
+      <div class="ui hidden divider"></div>
+      <div class="ui equal width grid">
+{# -------------------------------     大连二手房各区域总成交量---------------------------------------------------#}
+      <div class="row">
+        <div class="column">
+          <div class="ui container segment">
+            <a class="ui red ribbon label"><i class="bar chart icon"></i> bar chart</a>
+
+            <div class="ui container" id="chart1"></div>
+          </div>
+        </div>
+      </div>
+      <div class="ui divider"></div>
+{#      --------------------------------各区年度二手房成交量统计---------------------------------------------------#}
+      <div class="row">
+        <div class="column">
+          <div class="ui container segment">
+            <a class="ui red ribbon label"><i class="bar chart icon"></i> bar chart</a>
+
+            <div class="ui container" id="chart2"></div>
+          </div>
+        </div>
+      </div>
+      <div class="ui divider"></div>
+{#      ---------------------------------二手房成交量前十---------------------------------------------------------#}
+      <div class="row">
+        <div class="column">
+          <div class="ui container segment">
+            <a class="ui red ribbon label"><i class="bar chart icon"></i> bar chart</a>
+
+            <div class="ui container" id="chart3"></div>
+          </div>
+        </div>
+      </div>
+      <div class="ui divider"></div>
+{#--------------------------------------大连总成交量前10区域年度房价统计---------------------------------#}
+      <div class="row">
+        <div class="column">
+          <div class="ui container segment">
+            <a class="ui red ribbon label"><i class="line chart icon"></i> line chart</a>
+
+            <div class="ui container" id="chart4"></div>
+          </div>
+        </div>
+      </div>
+      <div class="ui divider"></div>
+{#---------------------------------浏览量前200的房屋面积和价格分布---------------------------------------------------#}
+      <div class="row">
+        <div class="column">
+          <div class="ui container segment">
+            <a class="ui red ribbon label"><i class="area chart icon"></i> scatter chart</a>
+
+            <div class="ui container" id="chart5"></div>
+          </div>
+        </div>
+      </div>
+      <div class="ui divider"></div>
+
+{#      ---------------------------------------#}
+      <div class="row">
+        <div class="column">
+          <div class="ui container segment">
+            <a class="ui red ribbon label"><i class="pie chart icon"></i> pie chart</a>
+
+            <div class="ui container" id="chart6"></div>
+          </div>
+        </div>
+      </div>
+
+{#        -------------------------------#}
+    </div>
+    </div>
+{% endblock %}
+
+{% block chartjs %}
+{#  -----------chart1------------------#}
+    <script>
+      $(function () {
+          $('#chart1').highcharts({
+              chart: {
+                  type: 'column'
+              },
+                credits: {
+                    text: 'i-m.top',
+                    href: 'http://i-m.top'
+                },
+              title: {
+                  text: '大连二手房各区域总成交量'
+              },
+              subtitle: {
+                  text: '数据截止 2017-05-07，来源:链家网'
+              },
+              plotOptions: {
+                  column: {
+                      dataLabels: {
+                          enabled: true
+                      }
+                  }
+              },
+              yAxis: {
+                  min: 0,
+                  title: {
+                      text: '成交量（套）'
+                  }
+              },
+              xAxis: {
+                  labels: {
+                      enabled: false
+                  }
+              },
+
+              series: {{ all_area_series|safe }}
+
+          });
+      });
+
+  </script>
+{#  ------------------chart2----------------#}
+    <script>
+      $(function () {
+          $('#chart2').highcharts({
+              chart: {
+                  type: 'column',
+{#                  zoomType: 'xy'#}
+              },
+              credits: {
+                    text: 'i-m.top',
+                    href: 'http://i-m.top'
+                },
+              title: {
+                  text: '各区年度二手房成交量统计'
+              },
+              subtitle: {
+                  text: '数据截止 2017-05-07，来源:链家网'
+              },
+              xAxis: {
+                  categories: ['2010年','2011年','2012年','2013年','2014年','2015年','2016年','2017年']
+              },
+              yAxis: {
+                  min: 0,
+                  title: {
+                      text: '成交量（套）'
+                  }
+              },
+              tooltip: {
+                  headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                  pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                  '<td style="padding:0"><b>{point.y} 套</b></td></tr>',
+                  footerFormat: '</table>',
+                  shared: true,
+                  useHTML: true
+              },
+              series: {{ annual_num_data|safe }}
+
+          });
+      });
+
+  </script>
+{#  ----------------chart3------------------#}
+    <script>
+      $(function () {
+          $('#chart3').highcharts({
+              chart: {
+                  type: 'column'
+              },
+              credits: {
+                    text: 'i-m.top',
+                    href: 'http://i-m.top'
+                },
+              title:{
+                  text: '大连二手房成交量前十'
+              },
+              subtitle: {
+                  text: '数据截止 2017-05-07，来源:链家网'
+              },
+              plotOptions: {
+                  column: {
+                      dataLabels: {
+                          enabled: true,
+                          rotation: -90,
+{#                          color: '#FFFFFF',#}
+                          align: 'right',
+                          format: '{point.y}',
+                          y: 10,
+                          style: {
+                              fontSize: '15px',
+{#                              fontFamily: 'ubuntu mono'#}
+                          }
+                      }
+                  }
+              },
+              xAxis: {
+                  type: 'category',
+                  labels: {
+                      rotation: -45,
+                      style: {
+                          fontSize: '13px',
+                          fontFamily: 'Verdana, sans-serif'
+                      }
+                  }
+              },
+              yAxis: {
+                  min: 0,
+                  title: {
+                      text: '成交量（套）'
+                  }
+              },
+              legend: {
+                  enabled: false
+              },
+              series: {{ top_ten_data|safe }}
+          });
+      });
+
+  </script>
+{#  ------------------chart4-----------------#}
+    <script>
+        $(function () {
+            $('#chart4').highcharts({
+                chart: {
+                    type: 'spline'
+                },
+                credits: {
+                    text: 'i-m.top',
+                    href: 'http://i-m.top'
+                },
+                title: {
+                    text: '大连总成交量前10区域年度房屋单价统计'
+                },
+                subtitle: {
+                    text: '数据截止 2017-05-07，来源:链家网'
+                },
+                xAxis: {
+                    categories: ['2010年','2011年','2012年','2013年','2014年','2015年','2016年','2017年']
+                },
+                yAxis: {
+                    title: {
+                        text: '平米/元'
+                    }
+                },
+                tooltip: {
+                    valueDecimals: 1,
+                    valueSuffix: '元',
+                    shared: true
+                },
+                series: {{ top_ten_avg_price|safe }}
+    });
+});
+
+
+  </script>
+{#  --------------chart5---------------------#}
+    <script>
+        $(function () {
+            $('#chart5').highcharts({
+                chart: {
+                    type: 'scatter',
+                    zoomType: 'xy'
+                },
+                credits: {
+                    text: 'i-m.top',
+                    href: 'http://i-m.top'
+                },
+                title: {
+                    text: '浏览量前200的房屋面积和价格分布'
+                },
+                subtitle: {
+                    text: '数据截止 2017-05-07，来源:链家网'
+                },
+                xAxis: {
+                    title: {
+                        enabled: true,
+                        text: '面积 (㎡)'
+                    },
+                    startOnTick: true,
+                    endOnTick: true,
+                    showLastLabel: true
+                },
+                yAxis: {
+                    title: {
+                        text: '价格 (万元)'
+                    }
+                },
+                legend: {
+                    layout: 'vertical',
+                    align: 'left',
+                    verticalAlign: 'top',
+                    x: 100,
+                    y: 70,
+                    floating: true,
+                    backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF',
+                    borderWidth: 1
+                },
+                plotOptions: {
+                    scatter: {
+                        marker: {
+                            radius: 5,
+                            states: {
+                                hover: {
+                                    enabled: true,
+                                    lineColor: 'rgb(100,100,100)'
+                                }
+                            }
+                        },
+                        states: {
+                            hover: {
+                                marker: {
+                                    enabled: false
+                                }
+                            }
+                        },
+                        tooltip: {
+                            headerFormat: '<b>{series.name}</b><br>',
+                            pointFormat: '{point.x} ㎡, {point.y} 万'
+                        }
+                    }
+                },
+                series: {{ top_200|safe}}
+
+            });
+        });
+
+    </script>
+{#  -----------------chart6-----------------#}
+    <script>
+    $(function () {
+        $('#chart6').highcharts({
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false
+            },
+            credits: {
+                    text: 'i-m.top',
+                    href: 'http://i-m.top'
+                },
+            title: {
+                text: '不同价位房产成交量分布占比'
+            },
+            'subtitle': {
+                'text': '数据截止 2017-05-07，来源:链家网'
+            },
+            tooltip: {
+                headerFormat: '{series.name}<br>',
+                pointFormat: '{point.name}: <b>{point.percentage:.1f}%</b>'
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: true,
+                        format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                        style: {
+                            color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                        }
+                    }
+                }
+            },
+            series: [{
+                type: 'pie',
+                name: '成交量',
+                data:{{ pie_data|safe }}
+            }]
+        });
+    });
+
+    </script>
+{% endblock %}
