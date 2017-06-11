@@ -10,16 +10,52 @@ end_date = ['2010-12-31','2011-12-31','2012-12-31','2013-12-31','2014-12-31','20
 annual_list = ['2010年','2011年','2012年','2013年','2014年','2015年','2016年','2017年']
 ### ----------------------大连二手房各区域总成交量-------------------------------------------------------------------------#
 
+# def get_area_sum():
+#     for i in HouseInfo._get_collection().aggregate(
+#             [{'$project': {'_id': 0, 'area': 1}}, {'$group': {'_id': {'$slice': ['$area', 0, 1]}, 'sum': {'$sum': 1}}},
+#              {'$sort': {'sum': -1}}]):
+#         data = {
+#             'name': i['_id'][0],
+#             'data': [i['sum']],
+#         }
+#         yield data
+# all_area_series = [i for i in get_area_sum()]
+pipeline23 = [
+    {'$project':{'_id':0, 'area':1}},
+    {'$group':{'_id':'$area', 'sum':{'$sum':1}}},
+    {'$sort':{'sum':-1}}
+]
+pipeline22 = [
+    {'$project':{'_id':0, 'area':1}},
+    {'$group':{'_id':{'$slice':['$area',0,1]}, 'sum':{'$sum':1}}},
+    {'$sort':{'sum':-1}}
+]
 def get_area_sum():
-    for i in HouseInfo._get_collection().aggregate(
-            [{'$project': {'_id': 0, 'area': 1}}, {'$group': {'_id': {'$slice': ['$area', 0, 1]}, 'sum': {'$sum': 1}}},
-             {'$sort': {'sum': -1}}]):
+    for i in HouseInfo._get_collection().aggregate(pipeline22):
         data = {
-            'name': i['_id'][0],
-            'data': [i['sum']],
+            'name':i['_id'][0],
+            'y':i['sum'],
+            'drilldown':i['_id'][0]
         }
         yield data
-all_area_series = [i for i in get_area_sum()]
+
+
+def detail_info():
+    for im in get_area_sum():
+        list1 = []
+        for i in HouseInfo._get_collection().aggregate(pipeline23):
+            if i['_id'][0] == im['name']:
+                list1.append([i['_id'][1],i['sum']])
+            else:
+                pass
+        data = {
+            # 'name':im['name'],
+            'id':im['name'],
+            'data':list1
+        }
+        yield data
+all_area = [i for i in get_area_sum()]
+detial = [ i for i in detail_info()]
 # --------------------------------------------------------------------------------------------------------------------
 
 #---------------------------大连各区域各年度二手房数量统计------------------------------------------------------------------
@@ -87,7 +123,7 @@ def get_top_ten_avg_price():
                 ]
             sum = 0
             for i in HouseInfo._get_collection().aggregate(pipeline):
-              
+
                 if i['_id'][1] == im['_id'][1]:
                     area_year_posts.append(i['avg_price'])
                     sum += 1
@@ -180,7 +216,9 @@ def index(request):
 
 def charts(request):
     context = {
-        'all_area_series': all_area_series,
+        # 'all_area_series': all_area_series,
+        'all_area': all_area,
+        'detial': detial,
         'annual_num_data': annual_num_data,
         'top_ten_data': top_ten_data,
         'top_ten_avg_price': top_ten_avg_price,

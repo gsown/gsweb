@@ -5,15 +5,14 @@
 {% endblock %}
 
 {% block grid %}
-    <div class="ui container">
+<div class="ui vertical stripe segment">
+    <div class="ui middle aligned stackable grid container">
       <div class="ui hidden divider"></div>
-      <div class="ui equal width grid">
 {# -------------------------------     大连二手房各区域总成交量---------------------------------------------------#}
       <div class="row">
         <div class="column">
           <div class="ui container segment">
             <a class="ui red ribbon label"><i class="bar chart icon"></i> bar chart</a>
-
             <div class="ui container" id="chart1"></div>
           </div>
         </div>
@@ -24,7 +23,6 @@
         <div class="column">
           <div class="ui container segment">
             <a class="ui red ribbon label"><i class="bar chart icon"></i> bar chart</a>
-
             <div class="ui container" id="chart2"></div>
           </div>
         </div>
@@ -35,7 +33,6 @@
         <div class="column">
           <div class="ui container segment">
             <a class="ui red ribbon label"><i class="bar chart icon"></i> bar chart</a>
-
             <div class="ui container" id="chart3"></div>
           </div>
         </div>
@@ -46,7 +43,6 @@
         <div class="column">
           <div class="ui container segment">
             <a class="ui red ribbon label"><i class="line chart icon"></i> line chart</a>
-
             <div class="ui container" id="chart4"></div>
           </div>
         </div>
@@ -57,27 +53,24 @@
         <div class="column">
           <div class="ui container segment">
             <a class="ui red ribbon label"><i class="area chart icon"></i> scatter chart</a>
-
             <div class="ui container" id="chart5"></div>
           </div>
         </div>
       </div>
       <div class="ui divider"></div>
-
 {#      ---------------------------------------#}
       <div class="row">
         <div class="column">
           <div class="ui container segment">
             <a class="ui red ribbon label"><i class="pie chart icon"></i> pie chart</a>
-
             <div class="ui container" id="chart6"></div>
           </div>
         </div>
       </div>
-
 {#        -------------------------------#}
     </div>
-    </div>
+    <div class="ui hidden divider"></div>
+  </div>
 {% endblock %}
 
 {% block chartjs %}
@@ -85,56 +78,57 @@
     <script>
       $(function () {
           $('#chart1').highcharts({
-              chart: {
-                  type: 'column'
-              },
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: '大连二手房各区域总成交量'
+                },
+                subtitle: {
+                  text: '数据截止 2017-05-07，来源:链家网'
+                },
+                xAxis: {
+                    type: 'category'
+                },
+                yAxis: {
+                    min: 0,
+                    title: {
+                        text: '成交量（套）'
+                    }
+                },
+                legend: {
+                    enabled: false
+                },
                 credits: {
                     text: 'i-m.top',
                     href: 'http://i-m.top'
                 },
-              title: {
-                  text: '大连二手房各区域总成交量'
-              },
-              subtitle: {
-                  text: '数据截止 2017-05-07，来源:链家网'
-              },
-              plotOptions: {
-                  column: {
-                      dataLabels: {
-                          enabled: true
-                      }
-                  }
-              },
-              yAxis: {
-                  min: 0,
-                  title: {
-                      text: '成交量（套）'
-                  }
-              },
-              xAxis: {
-                  labels: {
-                      enabled: false
-                  }
-              },
-
-              series: {{ all_area_series|safe }}
-
+                plotOptions: {
+                    series: {
+                        borderWidth: 0,
+                        dataLabels: {
+                            enabled: true
+                        }
+                    }
+                },
+                series: [{
+                    name: '成交量',
+                    colorByPoint: true,
+                    data: {{ all_area|safe }},
+                }],
+                drilldown: {
+                    series: {{ detial|safe }}
+                }
           });
       });
-
   </script>
 {#  ------------------chart2----------------#}
     <script>
       $(function () {
           $('#chart2').highcharts({
               chart: {
-                  type: 'column',
-{#                  zoomType: 'xy'#}
+                  type: 'column'
               },
-              credits: {
-                    text: 'i-m.top',
-                    href: 'http://i-m.top'
-                },
               title: {
                   text: '各区年度二手房成交量统计'
               },
@@ -148,21 +142,34 @@
                   min: 0,
                   title: {
                       text: '成交量（套）'
+                  },
+                  stackLabels: {
+                      enabled: true,
+                      style: {
+                          fontWeight: 'bold',
+                          color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+                      }
                   }
               },
+              credits: {
+                    text: 'i-m.top',
+                    href: 'http://i-m.top'
+              },
               tooltip: {
-                  headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-                  pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                  '<td style="padding:0"><b>{point.y} 套</b></td></tr>',
-                  footerFormat: '</table>',
-                  shared: true,
-                  useHTML: true
+                  formatter: function () {
+                      return '<b>' + this.x + '</b><br/>' +
+                          this.series.name + ': ' + this.y + '<br/>' +
+                          '总量: ' + this.point.stackTotal;
+                  }
+              },
+              plotOptions: {
+                  column: {
+                      stacking: 'normal',
+                  }
               },
               series: {{ annual_num_data|safe }}
-
           });
       });
-
   </script>
 {#  ----------------chart3------------------#}
     <script>
@@ -174,7 +181,7 @@
               credits: {
                     text: 'i-m.top',
                     href: 'http://i-m.top'
-                },
+              },
               title:{
                   text: '大连二手房成交量前十'
               },
@@ -186,13 +193,11 @@
                       dataLabels: {
                           enabled: true,
                           rotation: -90,
-{#                          color: '#FFFFFF',#}
                           align: 'right',
                           format: '{point.y}',
                           y: 10,
                           style: {
                               fontSize: '15px',
-{#                              fontFamily: 'ubuntu mono'#}
                           }
                       }
                   }
@@ -219,7 +224,6 @@
               series: {{ top_ten_data|safe }}
           });
       });
-
   </script>
 {#  ------------------chart4-----------------#}
     <script>
@@ -252,10 +256,8 @@
                     shared: true
                 },
                 series: {{ top_ten_avg_price|safe }}
-    });
-});
-
-
+            });
+        });
   </script>
 {#  --------------chart5---------------------#}
     <script>
@@ -324,7 +326,6 @@
                     }
                 },
                 series: {{ top_200|safe}}
-
             });
         });
 

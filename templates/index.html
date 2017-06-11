@@ -6,11 +6,14 @@
 {% endblock %}
 
 {% block grid %}
-  <div class="ui container">
+  <div class="ui vertical stripe segment">
+    <div class="ui center aligned stackable grid container">
+      <div class="row">
+<!--   <div class="ui container">
     <div class="ui hidden divider"></div>
-    <div class="ui three column  grid" style="margin-bottom: 10px">
+    <div class="ui three column  grid" style="margin-bottom: 10px"> -->
       {% for item in HouseInfo %}
-        <div class="column">
+        <div class="five wide left aligned column" style="margin:10px">
           <div class="ui card" style="margin: auto">
               <div class="content">
                 <h4 class="ui header" href="{{ item.url }}" target="_blank">{{ item.title }}</h4>
@@ -32,7 +35,7 @@
                       {{ tag }}
                     </div>
                   {% endfor %}
-                  <div class="ui right floated primary mini button" id="{{ item.id }}">
+                  <div class="ui right floated basic blue mini button" id="{{ item.id }}">
                     详细信息
                     <!--<i class="right chevron icon"></i>-->
                   </div>
@@ -150,6 +153,7 @@
     </div>
 
   </div>
+</div>
 
 
 {% endblock %}
